@@ -1,4 +1,4 @@
-<h1>Monoalphabetic_Cipher</h1>
+<h1>Monoalphabetic_Cipher (Early Stages)</h1>
 Encrypts a user input based on a Monoalphabetic Cipher<br><br>
 
 In future revisons of the program, the software will attempt to decrypt the encrypted message.<br>
