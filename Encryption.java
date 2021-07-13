@@ -17,7 +17,7 @@ class Encryption{
 
     //Constructor
     Encryption(String message){
-        this.message = message;
+        this.message = message.toLowerCase();
     }
 
     //getters and setters
