@@ -33,44 +33,77 @@ public class Decryption {
             new LetterFrequency('z', 0.07)
         ));
 
-    private ArrayList<String> scentence;
-    private ArrayList<String> guessedScentence = new ArrayList<String>();
+    private ArrayList<String> cipher;
+    private ArrayList<String> guessedCipher = new ArrayList<String>();
     private ArrayList<LetterFrequency> letterFreq = new ArrayList<LetterFrequency>();
 
 
     //methods
 
-    Decryption(String cipher){
-        splitCipher(cipher);
+    Decryption(String cMessage){
+        splitCipher(cMessage);
         createGuessedArray();
-        CalculateLetterFrequency();
+        CalculateLetterFrequency(cMessage.length());
         
         /*to be implemented
         createWordLength();
         */
     }
 
-    private void splitCipher(String cipher){
-        scentence = new ArrayList<String>(Arrays.asList(cipher.split(" ")));
-        System.out.printf("Split cipher %s\n", scentence);
+    private void splitCipher(String cMessage){
+        //storing the cipher as an arraylist of words, this will be striped of non alphabetic characters and split as per space.
+        cipher = new ArrayList<String>(Arrays.asList(cMessage.replaceAll("[^a-z ]", "").split(" ")));
+        System.out.printf("Split cipher %s\n", cipher);
     }
 
     private void createGuessedArray(){
-        for(String word : scentence){
+        for(String word : cipher){
             
             //generating a replacement the same length as word with - filled
             String replacement = "";
             for(int i = 0; i < word.length(); i++){
                 replacement += "-";
             }
-            guessedScentence.add(replacement);
+            guessedCipher.add(replacement);
         }
 
-        System.out.printf("Guessed Scentence %s\n",guessedScentence);
+        System.out.printf("Guessed Scentence %s\n",guessedCipher);
     }
 
-    private void CalculateLetterFrequency(){
-        System.out.printf("Calcuate Letter Frequency has been called\n");
+    private void CalculateLetterFrequency(int length){
+        char letter = 'a';
+
+        //looping through a-z
+        while((int)letter < 123){
+            int count = 0;
+            
+            //looping through each word within the cipher
+            for(String word : cipher){
+                //looping through each character within the word
+                for(int i = 0; i < word.length(); i++){
+                    //if the words are the same, the count will increase
+                    if(letter == word.charAt(i)){
+                        count ++;
+                    }
+                }
+            }
+
+            letterFreq.add(new LetterFrequency(letter, (double)count/length*100));
+            letter ++;
+        }
+
+
+        //sorting the arraylist based on the letter frequency
+        Collections.sort(letterFreq, new Comparator<LetterFrequency>(){
+            //ascending, flip to do decending
+            public int compare(LetterFrequency obj1, LetterFrequency obj2){
+                return Double.valueOf(obj2.getFreq()).compareTo(obj1.getFreq());
+            }
+        });
+        
+        //printing out letter Freq found
+        System.out.printf("Letter Frequency Found: %s\n", letterFreq);
+
     }
 
     
@@ -102,6 +135,10 @@ class LetterFrequency{
 
     public void setFreq(double freq) {
         this.freq = freq;
+    }
+
+    public String toString(){
+        return String.format("\nChar: %c\tFrequency: %f", getCharacter(), getFreq());
     }
 
 }
