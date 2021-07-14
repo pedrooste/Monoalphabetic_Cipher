@@ -22,6 +22,8 @@ class CipherEncryption{
         Encryption encrypt = new Encryption(scan.nextLine());
         encrypt.createKey();
         encrypt.createCipher();
+
+        Decryption decrypt = new Decryption(encrypt.getCipher());
     }
 }
 

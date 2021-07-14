@@ -85,10 +85,10 @@ class Encryption{
         setKey(localKey);
         
         //displaying alphabet
-        System.out.printf("Alphabet:\n%s\n", getAlpha());
+        System.out.printf("Alphabet:%n%s%n", getAlpha());
 
         //displaying key 
-        System.out.printf("Key created:\n%s\n", getKey());
+        System.out.printf("Key created:%n%s%n", getKey());
 
     }
 
@@ -120,7 +120,10 @@ class Encryption{
             localCipher += Character.toString(cLetter);
         }
 
-        System.out.printf("Cipher Text: %s", localCipher);
+        System.out.printf("Cipher Text: %s\n", localCipher);
+
+        //setting the cipher
+        cipher = localCipher;
     }
 
 }
