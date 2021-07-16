@@ -113,7 +113,7 @@ public class Decryption {
         boolean change = false;     //used to return, indicating a chage
 
         //looping through each object within letter frequency, looking for distinct frequencies
-        while( i < letterFreq.size()){
+        while( i < letterFreq.size()-1){                                                                //this is currently one less than the alhpabet, whilst its good now we should check it out later
             
             //if the frequency is not distinct, we will iterate to the next disntic frequency
             if(letterFreq.get(i).getFreq() == letterFreq.get(i+1).getFreq())    {
@@ -139,6 +139,9 @@ public class Decryption {
 
                 //removing the character from the guessable characters list
                 
+                //updating the guessedCipher
+                updateGuessedCipher(letterFreq.get(i));
+
                 //indicating a change has been made
                 change = true;
                 
@@ -146,11 +149,33 @@ public class Decryption {
             i ++;
         }
 
-        System.out.printf("Updated Gusesses:\n%s", letterFreq);
+        System.out.printf("Updated Gusesses:\n%s\n", letterFreq);
+        System.out.printf("\nUpdated cipher: %s", guessedCipher);
         return change;
 
     }
 
+    public void updateGuessedCipher(GuessedLetter guess){
+        //replaces all encrypted letters with the guessed letter
+
+        for(int a = 0; a < cipher.size(); a++){
+            //creates a temporary string to modify
+            String temp = guessedCipher.get(a);
+
+            for(int b = 0; b < cipher.get(a).length(); b++ ){
+                //checking to see if the characters are the same
+                if(cipher.get(a).charAt(b) == guess.getCharacter()){
+                    //updates character by seperating the string into two parts
+                    temp = temp.substring(0,b) + guess.getGussedLetter() + temp.substring(b + 1);
+                }
+            }
+
+            //updates string within the arrayList
+            guessedCipher.set(a, temp);
+
+        }
+
+    }
     
 }
 
