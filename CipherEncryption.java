@@ -24,6 +24,7 @@ class CipherEncryption{
         encrypt.createCipher();
 
         Decryption decrypt = new Decryption(encrypt.getCipher());
+        decrypt.GuessLetterFrequency();
     }
 }
 

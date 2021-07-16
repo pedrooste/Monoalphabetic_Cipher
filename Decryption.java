@@ -35,7 +35,7 @@ public class Decryption {
 
     private ArrayList<String> cipher;
     private ArrayList<String> guessedCipher = new ArrayList<String>();
-    private ArrayList<LetterFrequency> letterFreq = new ArrayList<LetterFrequency>();
+    private ArrayList<GuessedLetter> letterFreq = new ArrayList<GuessedLetter>();
 
 
     //methods
@@ -88,21 +88,66 @@ public class Decryption {
                 }
             }
 
-            letterFreq.add(new LetterFrequency(letter, (double)count/length*100));
+            letterFreq.add(new GuessedLetter(letter, (double)count/length*100));
             letter ++;
         }
 
-
+        
         //sorting the arraylist based on the letter frequency
-        Collections.sort(letterFreq, new Comparator<LetterFrequency>(){
+        Collections.sort(letterFreq, new Comparator<GuessedLetter>(){
             //ascending, flip to do decending
-            public int compare(LetterFrequency obj1, LetterFrequency obj2){
+            public int compare(GuessedLetter obj1, GuessedLetter obj2){
                 return Double.valueOf(obj2.getFreq()).compareTo(obj1.getFreq());
             }
         });
         
+        
         //printing out letter Freq found
         System.out.printf("Letter Frequency Found: %s\n", letterFreq);
+
+    }
+
+    public boolean GuessLetterFrequency(){
+        
+        int i =0;
+        boolean change = false;     //used to return, indicating a chage
+
+        //looping through each object within letter frequency, looking for distinct frequencies
+        while( i < letterFreq.size()){
+            
+            //if the frequency is not distinct, we will iterate to the next disntic frequency
+            if(letterFreq.get(i).getFreq() == letterFreq.get(i+1).getFreq())    {
+                
+                int count = 2;
+                boolean duplicate = true;
+                
+                //finding the next distinct frequency
+                while(duplicate && i+count < letterFreq.size()){
+                    if(letterFreq.get(i).getFreq() == letterFreq.get(i+count).getFreq())    {
+                        count ++;
+                    }
+                    else{
+                        duplicate = false;
+                    }
+                }
+                i += count;
+
+            }
+            else{
+                //Changing the gussed letter based on frequency
+                letterFreq.get(i).setGussedLetter(FreqStat.get(i).getCharacter());
+
+                //removing the character from the guessable characters list
+                
+                //indicating a change has been made
+                change = true;
+                
+            }
+            i ++;
+        }
+
+        System.out.printf("Updated Gusesses:\n%s", letterFreq);
+        return change;
 
     }
 
@@ -141,4 +186,29 @@ class LetterFrequency{
         return String.format("\nChar: %c\tFrequency: %f", getCharacter(), getFreq());
     }
 
+}
+
+class GuessedLetter extends LetterFrequency{
+
+    private char gussedLetter = '-';
+
+    GuessedLetter(char character, double freq){
+        super(character, freq);
+    
+    }        //calling the parent class constructor
+
+    //getters and setters
+    public char getGussedLetter() {
+        return this.gussedLetter;
+    }
+
+    public void setGussedLetter(char gussedLetter) {
+        this.gussedLetter = gussedLetter;
+    }
+
+
+    //tostring method
+    public String toString(){
+        return String.format("\nChar: %c\tFrequency: %f\tGuessed Letter: %c", getCharacter(), getFreq(), getGussedLetter());
+    }
 }
