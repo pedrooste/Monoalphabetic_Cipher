@@ -38,6 +38,41 @@ public class Decryption {
     private ArrayList<GuessedLetter> letterFreq = new ArrayList<GuessedLetter>();
 
 
+    //getters and setters
+
+    public ArrayList<LetterFrequency> getFreqStat() {
+        return this.FreqStat;
+    }
+
+    public void setFreqStat(ArrayList<LetterFrequency> FreqStat) {
+        this.FreqStat = FreqStat;
+    }
+
+    public ArrayList<String> getCipher() {
+        return this.cipher;
+    }
+
+    public void setCipher(ArrayList<String> cipher) {
+        this.cipher = cipher;
+    }
+
+    public ArrayList<String> getGuessedCipher() {
+        return this.guessedCipher;
+    }
+
+    public void setGuessedCipher(ArrayList<String> guessedCipher) {
+        this.guessedCipher = guessedCipher;
+    }
+
+    public ArrayList<GuessedLetter> getLetterFreq() {
+        return this.letterFreq;
+    }
+
+    public void setLetterFreq(ArrayList<GuessedLetter> letterFreq) {
+        this.letterFreq = letterFreq;
+    }
+
+
     //methods
 
     Decryption(String cMessage){
