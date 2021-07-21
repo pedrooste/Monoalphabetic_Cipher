@@ -1,4 +1,4 @@
-<h1>Monoalphabetic_Cipher (Early Stages)</h1>
+<h1>Monoalphabetic_Cipher</h1>
 Encrypts a user input based on a Monoalphabetic Cipher<br><br>
 
 <h3>Letter Frequency! (1st trial)</h3>
