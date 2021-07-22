@@ -32,7 +32,13 @@ public class Decryption {
             new LetterFrequency('j', 0.1),
             new LetterFrequency('z', 0.07)
         ));
+        
+    private ArrayList<String> singleLetter = new ArrayList<>(
+        Arrays.asList("a", "i"));
 
+    private ArrayList<String> twoLetter = new ArrayList<>(
+        Arrays.asList("of", "to", "in", "it", "is", "be", "as", "at", "so", "we", "he", "by", "or", "on", "do", "if", "me", "my", "up", "an", "go", "no", "us", "am"));
+    
     private ArrayList<String> cipher;
     private ArrayList<String> guessedCipher = new ArrayList<String>();
     private ArrayList<GuessedLetter> letterFreq = new ArrayList<GuessedLetter>();
@@ -138,10 +144,11 @@ public class Decryption {
         
         
         //printing out letter Freq found
-        System.out.printf("Letter Frequency Found: %s\n", letterFreq);
+        //System.out.printf("Letter Frequency Found: %s\n", letterFreq);
 
     }
 
+    /*Outdated
     public boolean GuessLetterFrequency(){
         
         int i =0;
@@ -189,6 +196,7 @@ public class Decryption {
         return change;
 
     }
+    */
 
     public void updateGuessedCipher(GuessedLetter guess){
         //replaces all encrypted letters with the guessed letter
@@ -211,7 +219,23 @@ public class Decryption {
         }
 
     }
-    
+ 
+    public void PossibleCharacters(){
+        //gets possible characters that the encoded letter could be from 5 closest characters from letter frequency
+        for(int a = 0; a < letterFreq.size(); a++){        
+            for(int b = -2; b < 3; b++){
+                try{
+                    letterFreq.get(a).getPossibleCharacters().add(FreqStat.get(a-b).getCharacter());
+                }
+                catch(IndexOutOfBoundsException err){     //find what error to catch
+                    //debug statement
+                    System.out.printf("\nIndex out of bounds, skipping");
+                }
+            }
+        }
+
+        System.out.printf("Possible Characters:\n\n%s", letterFreq);
+    }
 }
 
 //object to store within our arraylist
@@ -251,6 +275,7 @@ class LetterFrequency{
 class GuessedLetter extends LetterFrequency{
 
     private char gussedLetter = '-';
+    private ArrayList<Character> PossibleCharacters = new ArrayList<>();
 
     GuessedLetter(char character, double freq){
         super(character, freq);
@@ -266,9 +291,17 @@ class GuessedLetter extends LetterFrequency{
         this.gussedLetter = gussedLetter;
     }
 
+    public ArrayList<Character> getPossibleCharacters() {
+        return this.PossibleCharacters;
+    }
+
+    public void setPossibleCharacters(ArrayList<Character> PossibleCharacter) {
+        this.PossibleCharacters = PossibleCharacters;
+    }
+
 
     //tostring method
     public String toString(){
-        return String.format("\nChar: %c\tFrequency: %f\tGuessed Letter: %c", getCharacter(), getFreq(), getGussedLetter());
+        return String.format("\nChar: %c\tFrequency: %f\tGuessed Letter: %c\nPossible Guesses: %s\n", getCharacter(), getFreq(), getGussedLetter(), getPossibleCharacters());
     }
 }

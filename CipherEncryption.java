@@ -29,7 +29,8 @@ class CipherEncryption{
         cipherEncryption.encrypt.createCipher();
 
         cipherEncryption.decrypt = new Decryption(cipherEncryption.encrypt.getCipher());
-        cipherEncryption.decrypt.GuessLetterFrequency();
+        //cipherEncryption.decrypt.GuessLetterFrequency(); no longer in use
+        cipherEncryption.decrypt.PossibleCharacters();
 
         cipherEncryption.calculateCorrectGuesses();
 
