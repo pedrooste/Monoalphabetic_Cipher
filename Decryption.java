@@ -1,5 +1,15 @@
+//sample input
+/*
+If you're looking for random paragraphs, you've come to the right place. When a random word or a random sentence isn't quite enough, the next logical step is to find a random paragraph. We created the Random Paragraph Generator with you in mind. The process is quite simple. Choose the number of random paragraphs you'd like to see and click the button. Your chosen number of paragraphs will instantly appear.
+*/
+
+//errors
+//removing the wrong characters
+//checking isnt accurate,
+
 //import statements
 import java.util.*;
+import java.util.concurrent.atomic.AtomicInteger;
 
 public class Decryption {
     //creating letter frequency arrayList
@@ -220,7 +230,7 @@ public class Decryption {
 
     }
  
-    public void PossibleCharacters(){
+    public void possibleCharacters(){
         //gets possible characters that the encoded letter could be from 5 closest characters from letter frequency
         for(int a = 0; a < letterFreq.size(); a++){        
             for(int b = -2; b < 3; b++){
@@ -234,6 +244,80 @@ public class Decryption {
             }
         }
 
+        System.out.printf("Possible Characters:\n\n%s", letterFreq);
+    }
+
+    public void EliminationTwoLetter(){
+        
+        //for each object within letterFreq
+        for(int a = 0; a < letterFreq.size(); a++){
+
+            //recorded and compared entries
+            ArrayList<String> twoLetterInstance = new ArrayList<>();
+            ArrayList<Integer> twoLetterIndex = new ArrayList<>(Arrays.asList(0,0));
+            ArrayList<Integer> twoLetterComparison = new ArrayList<>(Arrays.asList(0,0));
+            ArrayList<Integer> indexRemoval = new ArrayList<>();
+
+            //for each word within the cipher
+            for(int b = 0; b < cipher.size(); b++){
+                //checking the size of the word and if the character is present
+                if(cipher.get(b).length() == 2 & cipher.get(b).contains(Character.toString(letterFreq.get(a).getCharacter()))){
+                    
+
+                    //checking wether the word is a duplicate
+                    if(twoLetterInstance.contains(cipher.get(b))){
+                        //skipping
+                    }
+                    else{
+                        //adding the two letter word into the list and increasing the index count
+                        twoLetterInstance.add(cipher.get(b));
+
+                        //finding the index of the word, increasing the counter
+                        int index = cipher.get(b).indexOf(letterFreq.get(a).getCharacter());
+                        int value = twoLetterIndex.get(index);
+                        value ++;
+                        twoLetterIndex.set(index, value);
+                    }
+                    
+                }
+            }
+
+            //for each possible letter guess
+            for(int b = 0; b < letterFreq.get(a).getPossibleCharacters().size(); b++){
+                
+                //for each two letter (statistic)
+                for(int c = 0; c < twoLetter.size(); c++){
+                    //checking for match
+                    if(twoLetter.get(c).contains(Character.toString(letterFreq.get(a).getPossibleCharacters().get(b)))){
+                        //recording the index if there is a match
+                        int index = twoLetter.get(c).indexOf(letterFreq.get(a).getPossibleCharacters().get(b));
+                        int value = twoLetterComparison.get(index);
+                        value ++;
+                        twoLetterComparison.set(index, value);
+                    }
+                }
+
+                //if the possible letter is not possible
+                if(twoLetterIndex.get(0) > twoLetterComparison.get(0) && twoLetterIndex.get(0) > twoLetterComparison.get(0)){
+                    //adding index to remove, this will be down out of the loop to prevent any clashes.
+                    System.out.printf("Character(cipher): %s, Character(possilbe): %s, index: %d, TwoLetterIndex: %s, TwoLetterCompariosn: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), b, twoLetterIndex, twoLetterComparison);
+                    indexRemoval.add(b);
+                }
+            }
+
+            //There is an error here, each time we remove a character all of the indexes move, we need to fix this
+            System.out.printf("Possible Guess Array: %s\n", letterFreq.get(a).getPossibleCharacters());
+            //removing characters
+            for(int b = 0; b < indexRemoval.size(); b++){
+                
+                System.out.printf("Removal, character: %s, Guess: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(indexRemoval.get(b)));
+
+                letterFreq.get(a).getPossibleCharacters().remove((int)indexRemoval.get(b));
+            }
+        }
+    }
+
+    public void printPossibleCharacters(){
         System.out.printf("Possible Characters:\n\n%s", letterFreq);
     }
 }
