@@ -297,20 +297,21 @@ public class Decryption {
                     }
                 }
 
+                //debug statemetn
+                System.out.printf("Character: %s, Guess: %s, Index: %s, Comparison %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), twoLetterIndex, twoLetterComparison);
+                
                 //if the possible letter is not possible
-                if(twoLetterIndex.get(0) > twoLetterComparison.get(0) && twoLetterIndex.get(0) > twoLetterComparison.get(0)){
+                if(twoLetterIndex.get(0) > twoLetterComparison.get(0) || twoLetterIndex.get(1) > twoLetterComparison.get(1)){
                     //adding index to remove, this will be down out of the loop to prevent any clashes.
                     System.out.printf("Character(cipher): %s, Character(possilbe): %s, index: %d, TwoLetterIndex: %s, TwoLetterCompariosn: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), b, twoLetterIndex, twoLetterComparison);
                     indexRemoval.add(b);
                 }
             }
 
-            //There is an error here, each time we remove a character all of the indexes move, we need to fix this
-            System.out.printf("Possible Guess Array: %s\n", letterFreq.get(a).getPossibleCharacters());
-            //removing characters
-            for(int b = 0; b < indexRemoval.size(); b++){
+            
+            //removing characters this has to be done backwards to not affect the indexing
+            for(int b = indexRemoval.size()-1 ; b > -1; b--){
                 
-                System.out.printf("Removal, character: %s, Guess: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(indexRemoval.get(b)));
 
                 letterFreq.get(a).getPossibleCharacters().remove((int)indexRemoval.get(b));
             }
