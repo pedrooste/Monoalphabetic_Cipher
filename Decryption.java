@@ -33,13 +33,15 @@ public class Decryption {
             new LetterFrequency('j', 0.1),
             new LetterFrequency('z', 0.07)
         ));
-        
-    private ArrayList<String> singleLetter = new ArrayList<>(
-        Arrays.asList("a", "i"));
 
-
-    private ArrayList<String> twoLetter = new ArrayList<>(
-        Arrays.asList("of", "to", "in", "it", "is", "be", "as", "at", "so", "we", "he", "by", "or", "on", "do", "if", "me", "my", "up", "an", "go", "no", "us", "am"));
+    //contains all common words
+    private ArrayList<ArrayList<String>> commonWords = new ArrayList<>(
+            Arrays.asList(
+                new ArrayList<>(Arrays.asList("a", "i")), 
+                new ArrayList<>(Arrays.asList("of", "to", "in", "it", "is", "be", "as", "at", "so", "we", "he", "by", "or", "on", "do", "if", "me", "my", "up", "an", "go", "no", "us", "am")), 
+                new ArrayList<>(Arrays.asList("the", "and", "for", "are", "but", "not", "you", "all", "any", "can", "had", "her", "was", "one", "our", "out", "day", "get", "has", "him", "his", "how", "man", "new", "now", "old", "see", "two", "way", "who", "boy", "did", "its", "let", "put", "say", "she", "too", "use")), 
+                new ArrayList<>(Arrays.asList("that", "with", "have", "this", "will", "your", "from", "they", "know", "want", "been", "good", "much", "some", "time", "what", "when", "then", "them", "like", "were", "come", "more", "make", "word", "said", "look", "many", "each", "long"))
+                ));
     
     private ArrayList<String> cipher;                                               
     private ArrayList<String> guessedCipher = new ArrayList<>();             
@@ -191,35 +193,45 @@ public class Decryption {
         System.out.printf("Possible Characters:\n\n%s", letterFreq);
     }
 
-    public void eliminationTwoLetter(){
+    public void letterElimination(int wordRow){
+        /*This method is used to check the letters against the words
+            whilst wordlist serves as a arrayindex it can also be used as the word size if we add 1
+        */
         
+        //checking within bounds. 
+        if(wordRow > commonWords.size() || wordRow < 0){
+            throw new IllegalArgumentException("Invalid Row");
+        }
+
+        //finding the size of the words
+        int size = commonWords.get(wordRow).get(0).length();
+
+
         //for each object within letterFreq
         for(int a = 0; a < letterFreq.size(); a++){
 
             //recorded and compared entries
-            ArrayList<String> twoLetterInstance = new ArrayList<>();                            //contains instances found
-            ArrayList<Integer> twoLetterIndex = new ArrayList<>(Arrays.asList(0,0));            //contains indexes found
-            ArrayList<Integer> indexRemoval = new ArrayList<>();                                //AL of indexes to be removed
+            ArrayList<String> wordInstance = new ArrayList<>();                                                      //contains instances found
+            ArrayList<Integer> letterIndex = new ArrayList<>(Collections.nCopies((wordRow+1), 0));            //contains indexes found
+            ArrayList<Integer> indexRemoval = new ArrayList<>();                                                     //AL of indexes to be removed
 
             //for each word within the cipher
             for(int b = 0; b < cipher.size(); b++){
                 //checking the size of the word and if the character is present
-                if(cipher.get(b).length() == 2 && cipher.get(b).contains(Character.toString(letterFreq.get(a).getCharacter()))){
+                if(cipher.get(b).length() == (wordRow + 1) && cipher.get(b).contains(Character.toString(letterFreq.get(a).getCharacter()))){
                     
 
                     //checking wether the word is a duplicate
-                    if(twoLetterInstance.contains(cipher.get(b))){
-                        //skipping
-                    }
-                    else{
+                    if(!wordInstance.contains(cipher.get(b))){
+                        
                         //adding the two letter word into the list and increasing the index count
-                        twoLetterInstance.add(cipher.get(b));
+                        wordInstance.add(cipher.get(b));
 
                         //finding the index of the word, increasing the counter
                         int index = cipher.get(b).indexOf(letterFreq.get(a).getCharacter());
-                        int value = twoLetterIndex.get(index);
+                        int value = letterIndex.get(index);
                         value ++;
-                        twoLetterIndex.set(index, value);
+                        letterIndex.set(index, value);
                     }
                     
                 }
@@ -228,29 +240,36 @@ public class Decryption {
             //for each possible letter guess
             for(int b = 0; b < letterFreq.get(a).getPossibleCharacters().size(); b++){
                 
-                ArrayList<Integer> twoLetterComparison = new ArrayList<>(Arrays.asList(0,0));       //contains possible indexes in statistics
+                ArrayList<Integer> letterComparison = new ArrayList<>(Collections.nCopies(size, 0));       //contains possible indexes in statistics
 
 
                 //for each two letter (statistic)
-                for(int c = 0; c < twoLetter.size(); c++){
+                for(int c = 0; c < commonWords.get(wordRow).size(); c++){
                     //checking for match
-                    if(twoLetter.get(c).contains(Character.toString(letterFreq.get(a).getPossibleCharacters().get(b)))){
+                    if(commonWords.get(wordRow).get(c).contains(Character.toString(letterFreq.get(a).getPossibleCharacters().get(b)))){
                         //recording the index if there is a match
-                        int index = twoLetter.get(c).indexOf(letterFreq.get(a).getPossibleCharacters().get(b));
-                        int value = twoLetterComparison.get(index);
+                        int index = commonWords.get(wordRow).get(c).indexOf(letterFreq.get(a).getPossibleCharacters().get(b));
+                        int value = letterComparison.get(index);
                         value ++;
-                        twoLetterComparison.set(index, value);
+                        letterComparison.set(index, value);
                     }
                 }
 
                 //debug statemetn
-                System.out.printf("Character: %s, Guess: %s, Index: %s, Comparison %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), twoLetterIndex, twoLetterComparison);
+                System.out.printf("Character: %s, Guess: %s, Index: %s, Comparison %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), letterIndex, letterComparison);
                 
                 //if the possible letter is not possible
-                if(twoLetterIndex.get(0) > twoLetterComparison.get(0) || twoLetterIndex.get(1) > twoLetterComparison.get(1)){
-                    //adding index to remove, this will be down out of the loop to prevent any clashes.
-                    System.out.printf("Character(cipher): %s, Character(getting removed): %s, index: %d, TwoLetterIndex: %s, TwoLetterCompariosn: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), b, twoLetterIndex, twoLetterComparison);
-                    indexRemoval.add(b);
+                boolean possible = true;
+                int counter = 0;
+
+                //checking whether the word is possible
+                while(possible && counter < size){
+                    if(letterIndex.get(counter) > letterComparison.get(counter)){
+                        System.out.printf("Character(cipher): %s, Character(getting removed): %s, index: %d, TwoLetterIndex: %s, TwoLetterCompariosn: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), b, letterIndex, letterComparison);
+                        indexRemoval.add(b);
+                        possible = false;
+                    }
+                    counter ++;
                 }
 
             }
@@ -264,8 +283,6 @@ public class Decryption {
             }
         }
     }
-
-
 
     public void printPossibleCharacters(){
         System.out.printf("Possible Characters:\n\n%s", letterFreq);

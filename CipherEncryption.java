@@ -31,7 +31,16 @@ class CipherEncryption{
         cipherEncryption.decrypt = new Decryption(cipherEncryption.encrypt.getCipher());
         //cipherEncryption.decrypt.GuessLetterFrequency(); no longer in use
         cipherEncryption.decrypt.possibleCharacters();
-        cipherEncryption.decrypt.eliminationTwoLetter();
+        
+        System.out.print("\n\nChecking single letter\n");
+        cipherEncryption.decrypt.letterElimination(0);
+        
+        System.out.print("\n\nChecking double letter\n");
+        cipherEncryption.decrypt.letterElimination(1);
+        
+        System.out.print("\n\nChecking tripple letter\n");
+        cipherEncryption.decrypt.letterElimination(2);
+        
 
         cipherEncryption.calculateCorrectGuesses();
 
