@@ -39,8 +39,8 @@ class Encryption{
         this.cipher = cipher;
     }
 
-    public ArrayList<Character> getAlpha() {
-        return this.alpha;
+    public static ArrayList<Character> getAlpha() {
+        return alpha;
     }
 
     public ArrayList<Character> getKey() {

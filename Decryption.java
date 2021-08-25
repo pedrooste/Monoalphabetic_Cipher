@@ -1,19 +1,10 @@
-//sample input
-/*
-If you're looking for random paragraphs, you've come to the right place. When a random word or a random sentence isn't quite enough, the next logical step is to find a random paragraph. We created the Random Paragraph Generator with you in mind. The process is quite simple. Choose the number of random paragraphs you'd like to see and click the button. Your chosen number of paragraphs will instantly appear.
-*/
-
-//errors
-//removing the wrong characters
-//checking isnt accurate,
-
 //import statements
 import java.util.*;
-import java.util.concurrent.atomic.AtomicInteger;
+//import java.util.concurrent.atomic.AtomicInteger;
 
 public class Decryption {
     //creating letter frequency arrayList
-    private ArrayList<LetterFrequency> FreqStat = new ArrayList<>(
+    private ArrayList<LetterFrequency> freqStat = new ArrayList<>(
         Arrays.asList(
             new LetterFrequency('e', 12.02),
             new LetterFrequency('t', 9.10),
@@ -46,22 +37,23 @@ public class Decryption {
     private ArrayList<String> singleLetter = new ArrayList<>(
         Arrays.asList("a", "i"));
 
+
     private ArrayList<String> twoLetter = new ArrayList<>(
         Arrays.asList("of", "to", "in", "it", "is", "be", "as", "at", "so", "we", "he", "by", "or", "on", "do", "if", "me", "my", "up", "an", "go", "no", "us", "am"));
     
-    private ArrayList<String> cipher;
-    private ArrayList<String> guessedCipher = new ArrayList<String>();
-    private ArrayList<GuessedLetter> letterFreq = new ArrayList<GuessedLetter>();
+    private ArrayList<String> cipher;                                               
+    private ArrayList<String> guessedCipher = new ArrayList<>();             
+    private ArrayList<GuessedLetter> letterFreq = new ArrayList<>();   
 
 
     //getters and setters
 
     public ArrayList<LetterFrequency> getFreqStat() {
-        return this.FreqStat;
+        return this.freqStat;
     }
 
-    public void setFreqStat(ArrayList<LetterFrequency> FreqStat) {
-        this.FreqStat = FreqStat;
+    public void setFreqStat(ArrayList<LetterFrequency> freqStat) {
+        this.freqStat = freqStat;
     }
 
     public ArrayList<String> getCipher() {
@@ -94,11 +86,8 @@ public class Decryption {
     Decryption(String cMessage){
         splitCipher(cMessage);
         createGuessedArray();
-        CalculateLetterFrequency(cMessage.length());
+        calculateLetterFrequency(cMessage.length());
         
-        /*to be implemented
-        createWordLength();
-        */
     }
 
     private void splitCipher(String cMessage){
@@ -121,7 +110,7 @@ public class Decryption {
         System.out.printf("Guessed Scentence %s\n",guessedCipher);
     }
 
-    private void CalculateLetterFrequency(int length){
+    private void calculateLetterFrequency(int length){
         char letter = 'a';
 
         //looping through a-z
@@ -153,60 +142,7 @@ public class Decryption {
         });
         
         
-        //printing out letter Freq found
-        //System.out.printf("Letter Frequency Found: %s\n", letterFreq);
-
     }
-
-    /*Outdated
-    public boolean GuessLetterFrequency(){
-        
-        int i =0;
-        boolean change = false;     //used to return, indicating a chage
-
-        //looping through each object within letter frequency, looking for distinct frequencies
-        while( i < letterFreq.size()-1){                                                                //this is currently one less than the alhpabet, whilst its good now we should check it out later
-            
-            //if the frequency is not distinct, we will iterate to the next disntic frequency
-            if(letterFreq.get(i).getFreq() == letterFreq.get(i+1).getFreq())    {
-                
-                int count = 2;
-                boolean duplicate = true;
-                
-                //finding the next distinct frequency
-                while(duplicate && i+count < letterFreq.size()){
-                    if(letterFreq.get(i).getFreq() == letterFreq.get(i+count).getFreq())    {
-                        count ++;
-                    }
-                    else{
-                        duplicate = false;
-                    }
-                }
-                i += count;
-
-            }
-            else{
-                //Changing the gussed letter based on frequency
-                letterFreq.get(i).setGussedLetter(FreqStat.get(i).getCharacter());
-
-                //removing the character from the guessable characters list
-                
-                //updating the guessedCipher
-                updateGuessedCipher(letterFreq.get(i));
-
-                //indicating a change has been made
-                change = true;
-                
-            }
-            i ++;
-        }
-
-        System.out.printf("Updated Gusesses:\n%s\n", letterFreq);
-        System.out.printf("\nUpdated cipher: %s", guessedCipher);
-        return change;
-
-    }
-    */
 
     public void updateGuessedCipher(GuessedLetter guess){
         //replaces all encrypted letters with the guessed letter
@@ -232,36 +168,43 @@ public class Decryption {
  
     public void possibleCharacters(){
         //gets possible characters that the encoded letter could be from 5 closest characters from letter frequency
-        for(int a = 0; a < letterFreq.size(); a++){        
+        for(int a = 0; a < letterFreq.size(); a++){ 
+            //creating a temp Arraylist to be later set
+            ArrayList<Character> temp = new ArrayList<>();
+
+            //looping through five (from lower to upper)
             for(int b = -2; b < 3; b++){
                 try{
-                    letterFreq.get(a).getPossibleCharacters().add(FreqStat.get(a-b).getCharacter());
+                    temp.add(freqStat.get(a-b).getCharacter());
+
                 }
-                catch(IndexOutOfBoundsException err){     //find what error to catch
-                    //debug statement
-                    System.out.printf("\nIndex out of bounds, skipping");
+                catch(IndexOutOfBoundsException err){
+                    //catches either end of the array, this is expected
+                    System.out.printf("\nIndex out of bounds %d, skipping", (a-b));
                 }
             }
+
+            //setting the arrayList
+            letterFreq.get(a).setPossibleCharacters(temp);
         }
 
         System.out.printf("Possible Characters:\n\n%s", letterFreq);
     }
 
-    public void EliminationTwoLetter(){
+    public void eliminationTwoLetter(){
         
         //for each object within letterFreq
         for(int a = 0; a < letterFreq.size(); a++){
 
             //recorded and compared entries
-            ArrayList<String> twoLetterInstance = new ArrayList<>();
-            ArrayList<Integer> twoLetterIndex = new ArrayList<>(Arrays.asList(0,0));
-            ArrayList<Integer> twoLetterComparison = new ArrayList<>(Arrays.asList(0,0));
-            ArrayList<Integer> indexRemoval = new ArrayList<>();
+            ArrayList<String> twoLetterInstance = new ArrayList<>();                            //contains instances found
+            ArrayList<Integer> twoLetterIndex = new ArrayList<>(Arrays.asList(0,0));            //contains indexes found
+            ArrayList<Integer> indexRemoval = new ArrayList<>();                                //AL of indexes to be removed
 
             //for each word within the cipher
             for(int b = 0; b < cipher.size(); b++){
                 //checking the size of the word and if the character is present
-                if(cipher.get(b).length() == 2 & cipher.get(b).contains(Character.toString(letterFreq.get(a).getCharacter()))){
+                if(cipher.get(b).length() == 2 && cipher.get(b).contains(Character.toString(letterFreq.get(a).getCharacter()))){
                     
 
                     //checking wether the word is a duplicate
@@ -285,6 +228,9 @@ public class Decryption {
             //for each possible letter guess
             for(int b = 0; b < letterFreq.get(a).getPossibleCharacters().size(); b++){
                 
+                ArrayList<Integer> twoLetterComparison = new ArrayList<>(Arrays.asList(0,0));       //contains possible indexes in statistics
+
+
                 //for each two letter (statistic)
                 for(int c = 0; c < twoLetter.size(); c++){
                     //checking for match
@@ -303,9 +249,10 @@ public class Decryption {
                 //if the possible letter is not possible
                 if(twoLetterIndex.get(0) > twoLetterComparison.get(0) || twoLetterIndex.get(1) > twoLetterComparison.get(1)){
                     //adding index to remove, this will be down out of the loop to prevent any clashes.
-                    System.out.printf("Character(cipher): %s, Character(possilbe): %s, index: %d, TwoLetterIndex: %s, TwoLetterCompariosn: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), b, twoLetterIndex, twoLetterComparison);
+                    System.out.printf("Character(cipher): %s, Character(getting removed): %s, index: %d, TwoLetterIndex: %s, TwoLetterCompariosn: %s\n", letterFreq.get(a).getCharacter(), letterFreq.get(a).getPossibleCharacters().get(b), b, twoLetterIndex, twoLetterComparison);
                     indexRemoval.add(b);
                 }
+
             }
 
             
@@ -317,6 +264,8 @@ public class Decryption {
             }
         }
     }
+
+
 
     public void printPossibleCharacters(){
         System.out.printf("Possible Characters:\n\n%s", letterFreq);
@@ -360,7 +309,7 @@ class LetterFrequency{
 class GuessedLetter extends LetterFrequency{
 
     private char gussedLetter = '-';
-    private ArrayList<Character> PossibleCharacters = new ArrayList<>();
+    private ArrayList<Character> possibleCharacters = new ArrayList<>();
 
     GuessedLetter(char character, double freq){
         super(character, freq);
@@ -377,11 +326,11 @@ class GuessedLetter extends LetterFrequency{
     }
 
     public ArrayList<Character> getPossibleCharacters() {
-        return this.PossibleCharacters;
+        return this.possibleCharacters;
     }
 
-    public void setPossibleCharacters(ArrayList<Character> PossibleCharacter) {
-        this.PossibleCharacters = PossibleCharacters;
+    public void setPossibleCharacters(ArrayList<Character> possibleCharacters) {
+        this.possibleCharacters = possibleCharacters;
     }
 
 

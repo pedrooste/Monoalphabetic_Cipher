@@ -31,14 +31,20 @@ class CipherEncryption{
         cipherEncryption.decrypt = new Decryption(cipherEncryption.encrypt.getCipher());
         //cipherEncryption.decrypt.GuessLetterFrequency(); no longer in use
         cipherEncryption.decrypt.possibleCharacters();
-        cipherEncryption.decrypt.EliminationTwoLetter();
+        cipherEncryption.decrypt.eliminationTwoLetter();
 
         cipherEncryption.calculateCorrectGuesses();
 
         cipherEncryption.decrypt.printPossibleCharacters();
 
+
         
-    }
+
+
+
+}
+
+        
 
     
     //methods

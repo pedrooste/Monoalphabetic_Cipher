@@ -1,0 +1,33 @@
+Very basic data dictionary.
+
+Structure: Vname, datatype, desc, automated, extra
+
+CipherEncryption:
+Scanner		object			static scanner
+encrypt		object			encrypt class object
+decrypt		object			decrypt class object
+
+
+Encryption:
+message		String			User entered message				user based
+cipher		String			Encrypted message				automated based on key
+alpha		AL Char			Alphabet					hardcoded
+key		AL Char			Mapped Key					Randomly generated
+rand		Random obj		Static object
+
+Decryption:
+FreqStat	AL LetterFreq obj	Contains freq statistic				hardcoded
+singLetter	AL String		Contains common words				hardcoded
+twoLetter	AL String		contains common words				hardcoded
+cipher		AL String		copy of encryption cihper			automated on encryption		seperated into a list of words	
+guessed cipher	AL String		copy of cipher, using guesses			automated on gusses 		contains dashes that will ultimatly be replaced by guessed words, method works
+letterFreq	AL guessedLetter obj	cotains the frequency of guessed letters	automated on user entry		used to generate neighbours
+
+LetterFrequency:
+character	char			character itself				based on letters found
+freq		double			frequency found					based on user entry
+
+
+GuessedLetter extends LetterFrequency:
+guessedLetter		char			gussed letter within cipher			default = "-" later replaced	replacement to be implemented, methods all work
+possibleCharacters	AL Characters		contains 5 closest letters within freq		automated based on found information
