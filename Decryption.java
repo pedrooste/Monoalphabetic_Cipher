@@ -212,13 +212,13 @@ public class Decryption {
 
             //recorded and compared entries
             ArrayList<String> wordInstance = new ArrayList<>();                                                      //contains instances found
-            ArrayList<Integer> letterIndex = new ArrayList<>(Collections.nCopies((wordRow+1), 0));            //contains indexes found
+            ArrayList<Integer> letterIndex = new ArrayList<>(Collections.nCopies(size, 0));            //contains indexes found
             ArrayList<Integer> indexRemoval = new ArrayList<>();                                                     //AL of indexes to be removed
 
             //for each word within the cipher
             for(int b = 0; b < cipher.size(); b++){
                 //checking the size of the word and if the character is present
-                if(cipher.get(b).length() == (wordRow + 1) && cipher.get(b).contains(Character.toString(letterFreq.get(a).getCharacter()))){
+                if(cipher.get(b).length() == size && cipher.get(b).contains(Character.toString(letterFreq.get(a).getCharacter()))){
                     
 
                     //checking wether the word is a duplicate
